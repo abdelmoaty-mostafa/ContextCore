@@ -1,0 +1,30 @@
+import numpy as np
+import time
+
+class ContextCoreMIH:
+    def __init__(self, dims=[128, 256, 512], noise_level=0.1):
+        self.dims = dims
+        self.noise_level = noise_level
+        self.results = {}
+
+    def inject_noise(self, vector):
+        # Adding Gaussian noise to simulate real-world embedding drift
+        noise = np.random.normal(0, self.noise_level, vector.shape)
+        return vector + noise
+
+    def test_robustness(self):
+        print(f"🛠️ Testing Robustness (Noise Level: {self.noise_level*100}%)")
+        for d in self.dims:
+            # Generate a "Reference" vector and a "Noisy" query
+            ref_vector = np.random.randn(d)
+            query_vector = self.inject_noise(ref_vector)
+            
+            # Measure Similarity (Recall Proxy)
+            similarity = np.dot(ref_vector, query_vector) / (np.linalg.norm(ref_vector) * np.linalg.norm(query_vector))
+            
+            self.results[d] = similarity
+            print(f"Dimension {d}: Semantic Recall = {similarity*100:.2f}%")
+
+# Running the Robustness Test
+mih_sim = ContextCoreMIH()
+mih_sim.test_robustness()
