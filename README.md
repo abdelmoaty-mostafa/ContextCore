@@ -20,11 +20,6 @@ ContextCore is a multi-tier protocol designed to eliminate redundant KV-cache re
 - **Recall Rate:** > 95% using Multi-index Hashing.
 - **Efficiency:** O(1) semantic lookups vs O(N²) re-computation.
 
-### 🛠️ Usage
-```bash
-python benchmarks.py
-
-
 // 2. Core Architecture: The 3-Layer Backbone
 // Layer 1: Edge-Sequencers (L1)
 // The entry point of the protocol. It handles Causal Ordering at the nearest node to the user, ensuring that inputs are timestamped and sequenced before hitting the inference engine.
