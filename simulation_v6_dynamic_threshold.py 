@@ -1,0 +1,34 @@
+import numpy as np
+
+class ContextCoreController:
+    def __init__(self, sensitivity=0.05):
+        self.base_threshold = sensitivity
+        self.swap_count = 0
+        self.total_tokens = 0
+
+    def calculate_dynamic_threshold(self, entropy):
+        # Adjusts threshold based on how "confused" the model is (Entropy)
+        return self.base_threshold * (1 + entropy)
+
+    def should_trigger_resync(self, drift_magnitude, entropy):
+        self.total_tokens += 1
+        threshold = self.calculate_dynamic_threshold(entropy)
+        
+        if drift_magnitude > threshold:
+            self.swap_count += 1
+            return True, "HOT-SWAP TRIGGERED"
+        return False, "STABLE"
+
+    def get_stats(self):
+        freq = (self.swap_count / self.total_tokens) * 100
+        return f"Swap Frequency: {freq:.2f}% | Total Swaps: {self.swap_count}"
+
+# Quick Simulation
+controller = ContextCoreController()
+for _ in range(100):
+    # Simulating varying drift and entropy
+    drift = np.random.uniform(0, 0.15)
+    entropy = np.random.uniform(0.1, 0.5)
+    controller.should_trigger_resync(drift, entropy)
+
+print(f"📊 {controller.get_stats()}")
